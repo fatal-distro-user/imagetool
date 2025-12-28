@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool 12: Image Collage Maker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <h1>Image Collage Maker</h1>
+        <p>Create a collage from multiple images.</p>
+    </header>
+    <main>
+        <form>
+            <label for="imageUpload">Upload Images:</label>
+            <input type="file" id="imageUpload" accept="image/*" multiple>
+
+            <button type="button" id="createCollageButton">Create Collage</button>
+        </form>
+        <canvas id="canvas"></canvas>
+    </main>
+    <footer>
+        <p>&copy; 2025 Image Tools</p>
+    </footer>
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const createCollageButton = document.getElementById('createCollageButton');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let images = [];
+
+        imageUpload.addEventListener('change', (event) => {
+            const files = event.target.files;
+            images = [];
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    images.push(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        createCollageButton.addEventListener('click', () => {
+            const collageWidth = 800;
+            const collageHeight = 600;
+            canvas.width = collageWidth;
+            canvas.height = collageHeight;
+
+            ctx.clearRect(0, 0, collageWidth, collageHeight);
+
+            const rows = 2;
+            const cols = 2;
+            const imgWidth = collageWidth / cols;
+            const imgHeight = collageHeight / rows;
+
+            images.forEach((img, index) => {
+                const row = Math.floor(index / cols);
+                const col = index % cols;
+                ctx.drawImage(img, col * imgWidth, row * imgHeight, imgWidth, imgHeight);
+            });
+        });
+    </script>
+</body>
+</html>

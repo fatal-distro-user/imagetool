@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool 19: Image Stitcher</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <h1>Image Stitcher</h1>
+        <p>Stitch multiple images together.</p>
+    </header>
+    <main>
+        <form>
+            <label for="imageUpload">Upload Images:</label>
+            <input type="file" id="imageUpload" accept="image/*" multiple>
+
+            <button type="button" id="stitchButton">Stitch Images</button>
+        </form>
+        <canvas id="canvas"></canvas>
+    </main>
+    <footer>
+        <p>&copy; 2025 Image Tools</p>
+    </footer>
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const stitchButton = document.getElementById('stitchButton');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let images = [];
+
+        imageUpload.addEventListener('change', (event) => {
+            const files = event.target.files;
+            images = [];
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    images.push(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        stitchButton.addEventListener('click', () => {
+            const totalWidth = images.reduce((sum, img) => sum + img.width, 0);
+            const maxHeight = Math.max(...images.map(img => img.height));
+
+            canvas.width = totalWidth;
+            canvas.height = maxHeight;
+
+            let xOffset = 0;
+            images.forEach(img => {
+                ctx.drawImage(img, xOffset, 0);
+                xOffset += img.width;
+            });
+        });
+    </script>
+</body>
+</html>

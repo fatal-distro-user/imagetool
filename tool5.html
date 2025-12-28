@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool 5: Image Rotator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <h1>Image Rotator</h1>
+        <p>Rotate your images to any angle.</p>
+    </header>
+    <main>
+        <form>
+            <label for="imageUpload">Upload Image:</label>
+            <input type="file" id="imageUpload" accept="image/*">
+
+            <label for="angle">Rotation Angle (degrees):</label>
+            <input type="number" id="angle" placeholder="Enter angle">
+
+            <button type="button" id="rotateButton">Rotate</button>
+        </form>
+        <canvas id="canvas"></canvas>
+    </main>
+    <footer>
+        <p>&copy; 2025 Image Tools</p>
+    </footer>
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const angleInput = document.getElementById('angle');
+        const rotateButton = document.getElementById('rotateButton');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let image = new Image();
+
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    image.src = e.target.result;
+                    image.onload = () => {
+                        canvas.width = image.width;
+                        canvas.height = image.height;
+                        ctx.drawImage(image, 0, 0);
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        rotateButton.addEventListener('click', () => {
+            const angle = parseFloat(angleInput.value);
+            if (!isNaN(angle)) {
+                const radians = (angle * Math.PI) / 180;
+                const width = image.width;
+                const height = image.height;
+
+                canvas.width = Math.abs(width * Math.cos(radians)) + Math.abs(height * Math.sin(radians));
+                canvas.height = Math.abs(width * Math.sin(radians)) + Math.abs(height * Math.cos(radians));
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(radians);
+                ctx.drawImage(image, -width / 2, -height / 2);
+                ctx.resetTransform();
+            }
+        });
+    </script>
+</body>
+</html>

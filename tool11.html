@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool 11: Image Metadata Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <h1>Image Metadata Editor</h1>
+        <p>Edit metadata of your images.</p>
+    </header>
+    <main>
+        <form>
+            <label for="imageUpload">Upload Image:</label>
+            <input type="file" id="imageUpload" accept="image/*">
+
+            <label for="newMetadata">New Metadata:</label>
+            <textarea id="newMetadata" placeholder="Enter new metadata"></textarea>
+
+            <button type="button" id="editMetadataButton">Edit Metadata</button>
+        </form>
+        <pre id="metadata"></pre>
+    </main>
+    <footer>
+        <p>&copy; 2025 Image Tools</p>
+    </footer>
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const newMetadataInput = document.getElementById('newMetadata');
+        const editMetadataButton = document.getElementById('editMetadataButton');
+        const metadataDisplay = document.getElementById('metadata');
+
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const metadata = `
+File Name: ${file.name}
+File Size: ${file.size} bytes
+File Type: ${file.type}
+Last Modified: ${file.lastModifiedDate}
+                `;
+                metadataDisplay.textContent = metadata;
+            }
+        });
+
+        editMetadataButton.addEventListener('click', () => {
+            const newMetadata = newMetadataInput.value;
+            metadataDisplay.textContent = `Updated Metadata:\n${newMetadata}`;
+        });
+    </script>
+</body>
+</html>

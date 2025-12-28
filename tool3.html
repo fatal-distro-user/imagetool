@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool 3: Image Converter</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <h1>Image Converter</h1>
+        <p>Convert your images to different formats.</p>
+    </header>
+    <main>
+        <form>
+            <label for="imageUpload">Upload Image:</label>
+            <input type="file" id="imageUpload" accept="image/*">
+
+            <label for="format">Select Format:</label>
+            <select id="format">
+                <option value="jpeg">JPEG</option>
+                <option value="png">PNG</option>
+                <option value="webp">WebP</option>
+            </select>
+
+            <button type="button" id="convertButton">Convert</button>
+        </form>
+        <canvas id="canvas"></canvas>
+        <a id="downloadLink" style="display: none;">Download Converted Image</a>
+    </main>
+    <footer>
+        <p>&copy; 2025 Image Tools</p>
+    </footer>
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const formatSelect = document.getElementById('format');
+        const convertButton = document.getElementById('convertButton');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const downloadLink = document.getElementById('downloadLink');
+
+        let image = new Image();
+
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    image.src = e.target.result;
+                    image.onload = () => {
+                        canvas.width = image.width;
+                        canvas.height = image.height;
+                        ctx.drawImage(image, 0, 0);
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        convertButton.addEventListener('click', () => {
+            const format = formatSelect.value;
+            const dataURL = canvas.toDataURL(`image/${format}`);
+
+            downloadLink.href = dataURL;
+            downloadLink.download = `converted_image.${format}`;
+            downloadLink.style.display = 'block';
+            downloadLink.textContent = 'Download Converted Image';
+        });
+    </script>
+</body>
+</html>
